@@ -32,6 +32,7 @@ function randomDarkRGB() {
 function getRandomQuote() {
     //Create a variety to store the number of displayed quotes
     var quoteDisplayed = 0;
+    var randomIndex = 0;
 
     //Check how many quotes have been displayed
     for( var i = 0 ; i < quoteListTemp.length ; i += 1 ){
@@ -59,7 +60,7 @@ function getRandomQuote() {
 
     //Random a index number for the quote, but without the quotes that have been displayed
     do {
-        var randomIndex = Math.floor(Math.random() * quoteListTemp.length);
+        randomIndex = Math.floor(Math.random() * quoteListTemp.length);
     } while( quoteListTemp[randomIndex].displayed === true );
 
     //(FOR DEBUG) Display the quotes on the console
@@ -72,7 +73,7 @@ function getRandomQuote() {
     return quoteListTemp[randomIndex];
 }
 
-
+//Main function to display the quote
 function printQuote() {
     //Random a quote object from temporary quote list
     var quoteObj = getRandomQuote();
