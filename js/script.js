@@ -6,11 +6,14 @@ My Mother language is Traditional Chinese, not English.
 I tried my best to write comments in English and find English quotes.
 */
 
-//Make a temporary quote list.
+//Create a temporary quote list., make sure I won't change anything about  regular quote list
 var quoteListTemp = quoteList;
 
 //Create a variety to store intervalID
 var intervalID;
+
+//Create a variety to check if all quotes have displayed or not
+var allDisplayed = false;
 
 // event listener to respond to clicks on the page
 // when user clicks anywhere on the page, the "makeQuote" function is called
@@ -27,23 +30,42 @@ function randomDarkRGB() {
 
 //get the Random Quote from quote list
 function getRandomQuote() {
+    //Create a variety to store the number of displayed quotes
+    var quoteDisplayed = 0;
 
-    //Check if quoteListTemp is empty or not. If it is empty, reset it.
-    if( quoteListTemp.length === 0 ){
+    //Check how many quotes have been displayed
+    for( var i = 0 ; i < quoteListTemp.length ; i += 1 ){
+        if( quoteListTemp[i].displayed === true){
+            quoteDisplayed += 1;
+        }
+    }
 
-        //Put the quoteList to quoteListTemp
-        quoteListTemp = quoteList;
+    //If the number of quotes that been displayed is same as the quote list, it means all quotes have been displayed
+    if( quoteDisplayed === quoteListTemp.length ){
 
+        //Set allDisplayed to the true
+        allDisplayed = true;
+        quoteDisplayed = 0;
+    }
+
+    // If allDisplayed is true, reset all quote objects' displayed property to false
+    if( allDisplayed ){
         //Reset the displayed value to false
         for( var i = 0; i < quoteListTemp.length ; i += 1 ){
             quoteListTemp[i].displayed = false;
         }
+        allDisplayed = false;
     }
 
-    //Random a index number for the quote
-    var randomIndex = Math.floor( Math.random() * quoteListTemp.length );
+    //Random a index number for the quote, but without the quotes that have been displayed
+    do {
+        var randomIndex = Math.floor(Math.random() * quoteListTemp.length);
+    } while( quoteListTemp[randomIndex].displayed === true );
 
-    //Set the quote object's "displayed" property to "true", because it will be displayed on the page later.
+    //(FOR DEBUG) Display the quotes on the console
+    console.log( (quoteDisplayed + 1) + '. ' + quoteListTemp[randomIndex].quote );
+
+    //Set the quote object's "displayed" property to "true", because it will be displayed on the page later
     quoteListTemp[randomIndex].displayed = true;
 
     //return the quote object
@@ -54,9 +76,6 @@ function getRandomQuote() {
 function printQuote() {
     //Random a quote object from temporary quote list
     var quoteObj = getRandomQuote();
-
-    //Make an array to help me sort the quotes that not displayed
-    var nDisplayedList = [];
 
     //Store the string that I want to write on the page
     var html = '<p class="quote">';
@@ -87,20 +106,6 @@ function printQuote() {
 
     //Random background color
     bodyTag[0].style.backgroundColor = randomDarkRGB();
-
-    //  ( FOR DEBUG ) Check quotes that  showed before on the console
-    console.log( quoteObj['quote'] );
-
-    //Sort not displayed quotes
-    for( var i = 0 ; i < quoteListTemp.length ; i += 1) {
-
-        //Put not displayed quote objects to the nDisplayedList
-        if (quoteListTemp[i].displayed === false) {
-            nDisplayedList.push(quoteListTemp[i]);
-        }
-    }
-    //and put nDisplayedList back to the quoteListTemp
-    quoteListTemp = nDisplayedList;
 
     //Clear interval
     clearInterval( intervalID );
